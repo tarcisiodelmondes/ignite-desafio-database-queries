@@ -14,7 +14,9 @@ export class UsersRepository implements IUsersRepository {
   async findUserWithGamesById({
     user_id,
   }: IFindUserWithGamesDTO): Promise<User> {
-    const user = await this.repository.findOne(user_id);
+    const user = await this.repository.findOne(user_id, {
+      relations: ["games"],
+    });
 
     if (!user) {
       throw new Error("User not found");
@@ -24,7 +26,7 @@ export class UsersRepository implements IUsersRepository {
   }
 
   async findAllUsersOrderedByFirstName(): Promise<User[]> {
-    return this.repository.query("SELECT * FROM users BY ORDER name ASC");
+    return this.repository.query("SELECT * FROM users ORDER BY first_name ASC");
   }
 
   async findUserByFullName({
